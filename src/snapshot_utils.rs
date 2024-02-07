@@ -3,7 +3,8 @@ use aws_sdk_ec2::{Client, Error};
 use chrono::{DateTime, Duration, Utc};
 use std::io::Error as StdError;
 
-pub async fn prepare_snapshots_for_deletion_as_array() -> Result<Vec<(String, String)>, Error> {
+pub async fn prepare_snapshots_for_deletion_as_array() -> Result<Vec<(String, i64, String)>, Error>
+{
     let existing_snapshots = fetch_existing_snapshots_as_array().await;
     let snapshot_ids_for_deletion = existing_snapshots?;
 
@@ -11,7 +12,7 @@ pub async fn prepare_snapshots_for_deletion_as_array() -> Result<Vec<(String, St
 }
 
 #[allow(dead_code)]
-pub async fn fetch_existing_snapshots_as_array() -> Result<Vec<(String, String)>, Error> {
+pub async fn fetch_existing_snapshots_as_array() -> Result<Vec<(String, i64, String)>, Error> {
     let config = match load_config().await {
         Ok(config) => config,
         Err(e) => {
@@ -29,18 +30,11 @@ pub async fn fetch_existing_snapshots_as_array() -> Result<Vec<(String, String)>
 
     let mut snapshot_ids = Vec::new();
 
-    //for snapshot in snapshots {
-    //    if let (Some(snapshot_id), Some(start_time)) =
-    //        (snapshot.snapshot_id(), snapshot.start_time())
-    //    {
-    //        snapshot_ids.push((snapshot_id.to_string(), start_time.to_string()));
-    //    }
-    //}
-
     // snapshot_ids produces the following,
     // need to conver the second field to something more useful...
     // - Snapshot ID: "snap-02ee1dfe2efa1a54a", Start Time: "2024-02-06T04:08:04.65Z"
     //- Snapshot ID: "snap-09b40966263b9e763", Start Time: "2024-02-06T00:00:21.185Z"
+    //
 
     for snapshot in snapshots {
         if let (Some(snapshot_id), Some(start_time)) =
@@ -53,7 +47,7 @@ pub async fn fetch_existing_snapshots_as_array() -> Result<Vec<(String, String)>
                 let start_time_utc = start_time_dt.with_timezone(&Utc);
                 // Convert to seconds since Unix epoch
                 let start_time_seconds = start_time_utc.timestamp();
-                snapshot_ids.push((snapshot_id.to_string(), start_time_seconds.to_string()));
+                snapshot_ids.push((snapshot_id.to_string(), start_time_seconds, start_time_str));
             } else {
                 eprintln!("Error parsing start time: {}", start_time);
             }

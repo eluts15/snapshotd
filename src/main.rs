@@ -15,4 +15,14 @@ async fn main() {
         }
         Err(e) => eprintln!("Error fetching snapshots info: {:?}", e),
     }
+
+    match snapshot_utils::fetch_existing_snapshots_timestamps().await {
+        Ok(snapshots_info) => {
+            println!("Snapshots Info:");
+            for start_time in snapshots_info {
+                println!("Created At: {}", start_time);
+            }
+        }
+        Err(e) => eprintln!("Error fetching snapshots info: {:?}", e),
+    }
 }

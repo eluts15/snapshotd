@@ -1,0 +1,8 @@
+Found 2 snapshot(s)
+Snapshots Info:
+- Snapshot ID: snap-02ee1dfe2efa1a54a, Start Time: 1707192484 (2024-02-06T04:08:04.65Z)
+- Snapshot ID: snap-09b40966263b9e763, Start Time: 1707177621 (2024-02-06T00:00:21.185Z)
+Found 2 snapshot(s)
+Snapshots Info:
+Start Time: 1707192484
+Start Time: 1707177621

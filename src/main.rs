@@ -1,28 +1,20 @@
-mod configs;
 mod snapshot_utils;
+use crate::snapshot_utils::fetch_existing_snapshots_as_array_test;
+
+use aws_sdk_ec2::Client;
 
 #[tokio::main]
 async fn main() {
-    match snapshot_utils::prepare_snapshots_for_deletion_as_array().await {
-        Ok(snapshots_info) => {
-            println!("Snapshots Info:");
-            for (snapshot_id, start_time, start_time_str) in snapshots_info {
-                println!(
-                    "- Snapshot ID: {}, Start Time: {} ({})",
-                    snapshot_id, start_time, start_time_str
-                );
-            }
-        }
-        Err(e) => eprintln!("Error fetching snapshots info: {:?}", e),
-    }
+    let shared_config = aws_config::from_env()
+        .credentials_provider(
+            aws_config::profile::ProfileFileCredentialsProvider::builder()
+                .profile_name("deployments-dev")
+                .build(),
+        )
+        .load()
+        .await;
 
-    match snapshot_utils::fetch_existing_snapshots_timestamps().await {
-        Ok(snapshots_info) => {
-            println!("Snapshots Info:");
-            for start_time in snapshots_info {
-                println!("Created At: {}", start_time);
-            }
-        }
-        Err(e) => eprintln!("Error fetching snapshots info: {:?}", e),
-    }
+    let client = Client::new(&shared_config);
+
+    fetch_existing_snapshots_as_array_test(&client).await;
 }

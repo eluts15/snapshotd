@@ -7,8 +7,10 @@ edition = "2021"
 
 [dependencies]
 aws-config = { version = "1", features = ["behavior-version-latest"] }
-aws-smithy-types-convert = {version = "0.56.1", features = ["convert-chrono"]}
+aws-smithy-types-convert = {version = "0.56.1", features = ["convert-chrono", "convert-time"]}
+aws-smithy-types = "1.1.5"
 aws-sdk-ec2 = "1.18.0"
 chrono = "0.4.33"
 dotenv = "0.15.0"
 tokio = { version = "1", features = ["full"] }
+rayon = "1.8.1"

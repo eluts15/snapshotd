@@ -52,11 +52,16 @@ async fn main() {
         return;
     }
 
+    let mut snapshots_to_delete = Vec::new();
+
     // Process each snapshot
     if let Some(snapshots) = response.unwrap().snapshots {
         for snapshot in snapshots {
             // Call process_snapshot with snapshot and shared_config
-            process_snapshot(&client, snapshot);
+            snapshots_to_delete.extend(process_snapshot(&client, snapshot));
         }
     }
+
+    let x = snapshots_to_delete;
+    println!("To Delete:{:?}", x);
 }

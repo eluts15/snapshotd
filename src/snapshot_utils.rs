@@ -35,7 +35,7 @@ pub fn process_snapshot(_client: &Client, snapshot: Snapshot) -> Vec<String> {
 
     let mut prepare_deletion = Vec::new();
     // Here, call we need a function to compare
-    if start_time > last_thirty_days {
+    if start_time < last_thirty_days {
         println!("The following snapshot will be deleted: {}", snapshot_id);
         prepare_deletion.push(snapshot_id);
     } else {
@@ -45,7 +45,10 @@ pub fn process_snapshot(_client: &Client, snapshot: Snapshot) -> Vec<String> {
     prepare_deletion
 }
 
-pub fn delete_snapshot(_client: &Client, snapshot_ids: Vec<String>) {}
+pub fn delete_snapshot(client: &Client, snapshot_ids: Vec<String>) {
+    //let response = client.delete_snapshot().;
+    //let delete_these = &snapshot_ids;
+}
 
 //pub async fn count_snapshots() -> Result<(), Error> {k
 //    let config = match load_config().await {

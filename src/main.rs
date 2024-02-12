@@ -62,6 +62,11 @@ async fn main() {
         }
     }
 
-    let x = snapshots_to_delete;
-    println!("To Delete:{:?}", x);
+    let to_delete = snapshots_to_delete;
+    if !to_delete.is_empty() {
+        println!("The following will be deleted: {:?}", to_delete);
+        println!("No snapshots found matching the specified ")
+    } else {
+        println!("No snapshots found matching the specified parameters, not deleting anything.")
+    }
 }

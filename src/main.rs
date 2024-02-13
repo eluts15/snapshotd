@@ -34,7 +34,5 @@ async fn main() {
     }
 
     let snapshot_ids_to_delete = snapshots_to_delete;
-    println!("Executed in main: {:?}", snapshot_ids_to_delete);
-
     _ = delete_snapshots(&client, snapshot_ids_to_delete).await;
 }

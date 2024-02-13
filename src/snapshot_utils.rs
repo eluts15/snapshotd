@@ -31,8 +31,8 @@ pub fn process_snapshot(_client: &Client, snapshot: Snapshot) -> Vec<String> {
     //println!("Current Time is: {:?}", current_time);
 
     // For testing, lets consider snapshots older than 30 days to be deleted.
-    //let thirty_days = 30 * 24 * 60 * 60; // TODO: Hardcoded for testing logic.
-    let thirty_days = 24 * 60 * 60; // TODO: Hardcoded for testing logic.
+    let thirty_days = 30 * 24 * 60 * 60; // TODO: Hardcoded for testing logic.
+                                         //let thirty_days = 24 * 60 * 60; // TODO: Hardcoded for testing logic.
 
     // Determine the timestamp, 30 days in the past.
     let last_thirty_days = current_time - thirty_days;
@@ -48,7 +48,7 @@ pub fn process_snapshot(_client: &Client, snapshot: Snapshot) -> Vec<String> {
 pub async fn delete_snapshots(client: &Client, snapshot_ids: Vec<String>) -> Result<(), Error> {
     let snapshot_ids_to_delete = &snapshot_ids;
     println!(
-        "The following snapshot(s) will be deleted because they are older than 1 day(s): {:?}",
+        "The following snapshot(s) will be deleted because they are older than 30 day(s): {:?}",
         snapshot_ids_to_delete
     );
 

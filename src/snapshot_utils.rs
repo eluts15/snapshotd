@@ -2,7 +2,7 @@ use aws_sdk_ec2::types::Snapshot;
 use aws_sdk_ec2::{Client, Error};
 use chrono::Utc;
 
-pub fn process_snapshot(_client: &Client, snapshot: Snapshot) -> Vec<String> {
+pub fn process_snapshot(_client: &Client, snapshot: Snapshot, days: i64) -> Vec<String> {
     // Extract snapshot ID
     let snapshot_id = match snapshot.snapshot_id {
         Some(id) => id,
@@ -28,18 +28,13 @@ pub fn process_snapshot(_client: &Client, snapshot: Snapshot) -> Vec<String> {
     // Get the current time for comparision.
     let now = Utc::now();
     let current_time = now.timestamp();
-    //println!("Current Time is: {:?}", current_time);
 
-    // For testing, lets consider snapshots older than 30 days to be deleted.
-    let thirty_days = 30 * 24 * 60 * 60; // TODO: Hardcoded for testing logic.
-                                         //let thirty_days = 24 * 60 * 60; // TODO: Hardcoded for testing logic.
+    let specified_days_in_seconds = days; // User input -- convert number of days to seconds.
 
-    // Determine the timestamp, 30 days in the past.
-    let last_thirty_days = current_time - thirty_days;
-
+    let delete_window = current_time - specified_days_in_seconds;
     let mut prepare_deletion = Vec::new();
     // Here, call we need a function to compare
-    if start_time < last_thirty_days {
+    if start_time < delete_window {
         prepare_deletion.push(snapshot_id);
     }
     prepare_deletion
@@ -48,7 +43,7 @@ pub fn process_snapshot(_client: &Client, snapshot: Snapshot) -> Vec<String> {
 pub async fn delete_snapshots(client: &Client, snapshot_ids: Vec<String>) -> Result<(), Error> {
     let snapshot_ids_to_delete = &snapshot_ids;
     println!(
-        "The following snapshot(s) will be deleted because they are older than 30 day(s): {:?}",
+        "The following snapshot(s) will be deleted because they are older specified number of days: {:?}",
         snapshot_ids_to_delete
     );
 
@@ -56,7 +51,6 @@ pub async fn delete_snapshots(client: &Client, snapshot_ids: Vec<String>) -> Res
         match client
             .delete_snapshot()
             .snapshot_id(snapshot_id.clone())
-            .dry_run(true)
             .send()
             .await
         {

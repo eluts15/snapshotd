@@ -2,9 +2,11 @@ mod snapshot_utils;
 use crate::snapshot_utils::delete_snapshots;
 use crate::snapshot_utils::process_snapshot;
 use aws_sdk_ec2::Client;
+use clap::{arg, Command};
 
 #[tokio::main]
 async fn main() {
+    // AWS credential setup.
     let shared_config = aws_config::from_env()
         .credentials_provider(
             aws_config::profile::ProfileFileCredentialsProvider::builder()
@@ -15,6 +17,20 @@ async fn main() {
         .await;
 
     let client = Client::new(&shared_config);
+
+    // Cli component.
+    let matches = Command::new("snapshotd")
+        .version("1.0")
+        .about("Delete AWS snapshots older than the specified number of days.")
+        .arg(arg!(--days <VALUE>).required(true))
+        .get_matches();
+
+    let days_specified = matches.get_one::<String>("days");
+    let dt_string = days_specified.unwrap();
+    let timestamp: i64 = dt_string.parse().unwrap();
+    // Take the number of days the user provides and multipy it by 86400
+    let converted_dt = timestamp * 24 * 60 * 60; // 1 Day in seconds
+    println!("Days Specified as seconds: {:?}", converted_dt);
 
     // Perform the request
     let response = client.describe_snapshots().owner_ids("self").send().await;
@@ -29,7 +45,7 @@ async fn main() {
     if let Some(snapshots) = response.unwrap().snapshots {
         for snapshot in snapshots {
             // Call process_snapshot with snapshot and shared_config
-            snapshots_to_delete.extend(process_snapshot(&client, snapshot));
+            snapshots_to_delete.extend(process_snapshot(&client, snapshot, converted_dt));
         }
     }
 

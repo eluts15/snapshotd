@@ -60,15 +60,14 @@ pub async fn delete_snapshots(client: &Client, snapshot_ids: Vec<String>) -> Res
             .send()
             .await
         {
-            Ok(output) => {
-                println!(
-                    "Snapshot {:?} successfully deleted.\n
-                    Output: {:?}",
-                    snapshot_id, output
-                );
+            Ok(_output) => {
+                println!("Snapshot {:?} successfully deleted.", snapshot_id);
             }
-            Err(err) => {
-                println!("Failed to delete snapshot {}:{}", snapshot_id, err);
+            Err(_err) => {
+                println!(
+                    "Failed to delete snapshot {}, Permission Issue. Check IAM Permission Set.",
+                    snapshot_id
+                );
             }
         }
     }

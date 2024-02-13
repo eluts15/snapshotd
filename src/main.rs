@@ -28,9 +28,8 @@ async fn main() {
     let days_specified = matches.get_one::<String>("days");
     let dt_string = days_specified.unwrap();
     let timestamp: i64 = dt_string.parse().unwrap();
-    // Take the number of days the user provides and multipy it by 86400
+    // Take the number of days the user provides, convert it to unix_timestamp
     let converted_dt = timestamp * 24 * 60 * 60; // 1 Day in seconds
-    println!("Days Specified as seconds: {:?}", converted_dt);
 
     // Perform the request
     let response = client.describe_snapshots().owner_ids("self").send().await;

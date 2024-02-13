@@ -1,36 +1,7 @@
 mod snapshot_utils;
+use crate::snapshot_utils::delete_snapshots;
 use crate::snapshot_utils::process_snapshot;
 use aws_sdk_ec2::Client;
-//use aws_smithy_types::date_time::DateTime;
-
-// Fucking retarted
-//fn parse_rfc3339_to_datetime(datetime_str: &str) -> DateTime {
-//    // Parse the RFC 3339 formatted string into the components
-//    let datetime_parts: Vec<&str> = datetime_str.split('T').collect();
-//    let date_parts: Vec<&str> = datetime_parts[0].split('-').collect();
-//    let time_parts: Vec<&str> = datetime_parts[1].split(':').collect();
-//
-//    //Extract the individual components
-//    let year: u64 = date_parts[0].parse().expect("Invalid year");
-//    let month: u64 = date_parts[1].parse().expect("Invalid month");
-//    let day: u64 = date_parts[2]
-//        .split('T')
-//        .next()
-//        .unwrap()
-//        .parse()
-//        .expect("Invalid day");
-//    let hour: u64 = time_parts[0].parse().expect("Invalid hour");
-//    let minute: u64 = time_parts[1].parse().expect("Invalid minute");
-//    let second: u64 = time_parts[2]
-//        .split('.')
-//        .next()
-//        .unwrap()
-//        .parse()
-//        .expect("Invalid second");
-//
-//    // Create the DateTime object
-//    DateTime::from_secs(second.try_into().unwrap())
-//}
 
 #[tokio::main]
 async fn main() {
@@ -62,11 +33,8 @@ async fn main() {
         }
     }
 
-    let to_delete = snapshots_to_delete;
-    if !to_delete.is_empty() {
-        println!("The following will be deleted: {:?}", to_delete);
-        println!("No snapshots found matching the specified ")
-    } else {
-        println!("No snapshots found matching the specified parameters, not deleting anything.")
-    }
+    let snapshot_ids_to_delete = snapshots_to_delete;
+    println!("Executed in main: {:?}", snapshot_ids_to_delete);
+
+    _ = delete_snapshots(&client, snapshot_ids_to_delete).await;
 }

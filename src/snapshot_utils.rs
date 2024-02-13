@@ -1,6 +1,6 @@
 use aws_sdk_ec2::types::Snapshot;
 use aws_sdk_ec2::{Client, Error};
-use chrono::Utc;
+use chrono::{TimeZone, Utc};
 
 pub fn process_snapshot(_client: &Client, snapshot: Snapshot, days: i64) -> Vec<String> {
     // Extract snapshot ID
@@ -20,9 +20,21 @@ pub fn process_snapshot(_client: &Client, snapshot: Snapshot, days: i64) -> Vec<
             return Vec::new();
         }
     };
+
+    let start_time_human_readable = match snapshot.start_time {
+        Some(time) => {
+            let start_time = Utc.timestamp(time.secs(), 0);
+            start_time.to_string()
+        }
+        None => {
+            eprintln!("Snapshot start time not found");
+            return Vec::new();
+        }
+    };
+
     println!(
-        "Snapshot found: Snapshot_ID: {:?}, CreatedAt: {:?}",
-        snapshot_id, start_time
+        "Snapshot found: Snapshot_ID: {:?}, CreatedAt: {:?} {:?}",
+        snapshot_id, start_time, start_time_human_readable
     );
 
     // Get the current time for comparision.

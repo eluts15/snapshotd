@@ -32,6 +32,7 @@ async fn main() {
     let converted_dt = timestamp * 24 * 60 * 60; // 1 Day in seconds
 
     // Perform the request
+    // TODO: Add Pagination.
     let response = client.describe_snapshots().owner_ids("self").send().await;
     if let Err(err) = response {
         eprintln!("Error describing snapshots: {:?}", err);

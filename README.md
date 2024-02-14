@@ -20,13 +20,14 @@ Options:
   -h, --help          Print help
   -V, --version       Print version
 
+Both, --days, --write are required fields.
+
 ```
-
-
 
 # Delets snapshots older than the number of days specified
 
 ```
+### dry-run mode
 
 ./snapshotd --days 1 --write=false
 Snapshot found: Snapshot_ID: "snap-0a4db19b54e140275", CreatedAt: 1707799656 "2024-02-13 04:47:36 UTC"
@@ -38,6 +39,19 @@ Failed to delete snapshot snap-0a4db19b54e140275, Permission Issue. Check IAM Pe
 Failed to delete snapshot snap-088edc1e43a0b0a5a, Permission Issue. Check IAM Permission Set.
 Failed to delete snapshot snap-0b2bbcc18c57ea3a5, Permission Issue. Check IAM Permission Set.
 Failed to delete snapshot snap-0beda24665a9e7773, Permission Issue. Check IAM Permission Set.
+
+
+### success deletion
+./snapshotd --days 1 --write=true
+Snapshot found: Snapshot_ID: "snap-0a4db19b54e140275", CreatedAt: 1707799656 "2024-02-13 04:47:36 UTC"
+Snapshot found: Snapshot_ID: "snap-088edc1e43a0b0a5a", CreatedAt: 1707799938 "2024-02-13 04:52:18 UTC"
+Snapshot found: Snapshot_ID: "snap-0b2bbcc18c57ea3a5", CreatedAt: 1707799911 "2024-02-13 04:51:51 UTC"
+Snapshot found: Snapshot_ID: "snap-0beda24665a9e7773", CreatedAt: 1707799891 "2024-02-13 04:51:31 UTC"
+The following snapshot(s) will be deleted because they are older specified number of days: ["snap-0a4db19b54e140275", "snap-088edc1e43a0b0a5a", "snap-0b2bbcc18c57ea3a5", "snap-0beda24665a9e7773"]
+Snapshot "snap-0a4db19b54e140275" successfully deleted.
+Snapshot "snap-088edc1e43a0b0a5a" successfully deleted.
+Snapshot "snap-0b2bbcc18c57ea3a5" successfully deleted.
+Snapshot "snap-0beda24665a9e7773" successfully deleted.
 
 ```
 

@@ -13,7 +13,7 @@ Delete snapshots in AWS if they are older than the specified number of days.
 
 Delete AWS snapshots older than the specified number of days.
 
-Usage: snapshotd --days <VALUE>
+Usage: snapshotd --days <VALUE> --write <VALUE>
 
 Options:
       --days <VALUE>  

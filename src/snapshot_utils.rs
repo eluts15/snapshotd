@@ -102,7 +102,7 @@ pub async fn delete_snapshots(
                 }
                 Err(_err) => {
                     println!(
-                        "Failed to delete snapshot {}, Permission Issue. Check IAM Permission Set.",
+                        "Failed to delete snapshot {}, Running in dry-run mode or Permission Issue. Check IAM Permission Set.",
                         snapshot_id
                     );
                 }

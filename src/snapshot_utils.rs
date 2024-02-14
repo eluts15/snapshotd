@@ -52,30 +52,64 @@ pub fn process_snapshot(_client: &Client, snapshot: Snapshot, days: i64) -> Vec<
     prepare_deletion
 }
 
-pub async fn delete_snapshots(client: &Client, snapshot_ids: Vec<String>) -> Result<(), Error> {
+pub async fn delete_snapshots(
+    client: &Client,
+    snapshot_ids: Vec<String>,
+    write: bool,
+) -> Result<(), Error> {
     let snapshot_ids_to_delete = &snapshot_ids;
     println!(
         "The following snapshot(s) will be deleted because they are older specified number of days: {:?}",
         snapshot_ids_to_delete
     );
 
-    for snapshot_id in snapshot_ids {
-        match client
-            .delete_snapshot()
-            .snapshot_id(snapshot_id.clone())
-            .send()
-            .await
-        {
-            Ok(_output) => {
-                println!("Snapshot {:?} successfully deleted.", snapshot_id);
-            }
-            Err(_err) => {
-                println!(
-                    "Failed to delete snapshot {}, Permission Issue. Check IAM Permission Set.",
-                    snapshot_id
-                );
+    // if --write=true, delete
+    if write {
+        for snapshot_id in snapshot_ids {
+            match client
+                .delete_snapshot()
+                .dry_run(false)
+                .snapshot_id(snapshot_id.clone())
+                .send()
+                .await
+            {
+                Ok(_output) => {
+                    println!("Snapshot {:?} successfully deleted.", snapshot_id);
+                }
+                Err(_err) => {
+                    println!(
+                        "Failed to delete snapshot {}, Permission Issue. Check IAM Permission Set.",
+                        snapshot_id
+                    );
+                }
             }
         }
+        // if write=false, run in dry-run mode.
+    } else if !write {
+        for snapshot_id in snapshot_ids {
+            match client
+                .delete_snapshot()
+                .dry_run(true)
+                .snapshot_id(snapshot_id.clone())
+                .send()
+                .await
+            {
+                Ok(_output) => {
+                    println!(
+                        "Snapshot {:?} successfully deleted. (dry-run only.)",
+                        snapshot_id
+                    );
+                }
+                Err(_err) => {
+                    println!(
+                        "Failed to delete snapshot {}, Permission Issue. Check IAM Permission Set.",
+                        snapshot_id
+                    );
+                }
+            }
+        }
+    } else {
+        println!("--write flag not set, provide --write=true to delete, --write=false to run in dry-run mode.")
     }
     Ok(())
 }

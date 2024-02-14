@@ -1,17 +1,22 @@
-mod cli;
 mod snapshot_utils;
 use crate::snapshot_utils::delete_snapshots;
 use crate::snapshot_utils::process_snapshot;
 use aws_sdk_ec2::Client;
 use clap::{value_parser, Arg, Command};
+use dotenv::dotenv;
 
 #[tokio::main]
 async fn main() {
     // AWS credential setup.
+    dotenv().ok();
+
+    let env_profile = "PROFILE";
+
+    let profile_name = dotenv::var(env_profile).unwrap();
     let shared_config = aws_config::from_env()
         .credentials_provider(
             aws_config::profile::ProfileFileCredentialsProvider::builder()
-                .profile_name("deployments-dev")
+                .profile_name(profile_name)
                 .build(),
         )
         .load()

@@ -22,28 +22,22 @@ Options:
 
 ```
 
-```
+
 
 # Delets snapshots older than the number of days specified
 
-/snapshotd --days 1
-Snapshot found: Snapshot_ID: "snap-0a4db19b54e140275", CreatedAt: 1707799656
-Snapshot found: Snapshot_ID: "snap-02ee1dfe2efa1a54a", CreatedAt: 1707192484
-Snapshot found: Snapshot_ID: "snap-09b40966263b9e763", CreatedAt: 1707177621
-Snapshot found: Snapshot_ID: "snap-02a7ab62e907c299e", CreatedAt: 1707799642
-The following snapshot(s) will be deleted because they are older specified number of days: ["snap-02ee1dfe2efa1a54a", "snap-09b40966263b9e763"]
-Snapshot "snap-02ee1dfe2efa1a54a" successfully deleted.
-Snapshot "snap-09b40966263b9e763" successfully deleted.
+```
 
-# No specified snapshots meet the deletion window
-
-./snapshotd --days 30
-Snapshot found: Snapshot_ID: "snap-0a4db19b54e140275", CreatedAt: 1707799656
-Snapshot found: Snapshot_ID: "snap-088edc1e43a0b0a5a", CreatedAt: 1707799938
-Snapshot found: Snapshot_ID: "snap-0b2bbcc18c57ea3a5", CreatedAt: 1707799911
-Snapshot found: Snapshot_ID: "snap-0beda24665a9e7773", CreatedAt: 1707799891
-The following snapshot(s) will be deleted because they are older specified number of days: []
-
+./snapshotd --days 1 --write=false
+Snapshot found: Snapshot_ID: "snap-0a4db19b54e140275", CreatedAt: 1707799656 "2024-02-13 04:47:36 UTC"
+Snapshot found: Snapshot_ID: "snap-088edc1e43a0b0a5a", CreatedAt: 1707799938 "2024-02-13 04:52:18 UTC"
+Snapshot found: Snapshot_ID: "snap-0b2bbcc18c57ea3a5", CreatedAt: 1707799911 "2024-02-13 04:51:51 UTC"
+Snapshot found: Snapshot_ID: "snap-0beda24665a9e7773", CreatedAt: 1707799891 "2024-02-13 04:51:31 UTC"
+The following snapshot(s) will be deleted because they are older specified number of days: ["snap-0a4db19b54e140275", "snap-088edc1e43a0b0a5a", "snap-0b2bbcc18c57ea3a5", "snap-0beda24665a9e7773"]
+Failed to delete snapshot snap-0a4db19b54e140275, Permission Issue. Check IAM Permission Set.
+Failed to delete snapshot snap-088edc1e43a0b0a5a, Permission Issue. Check IAM Permission Set.
+Failed to delete snapshot snap-0b2bbcc18c57ea3a5, Permission Issue. Check IAM Permission Set.
+Failed to delete snapshot snap-0beda24665a9e7773, Permission Issue. Check IAM Permission Set.
 
 ```
 

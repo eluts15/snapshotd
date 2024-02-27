@@ -1,9 +1,5 @@
 # snapshotd
 
-## TODO
-- I still need figure out how to pass --dry-run=false. It `will` currently delete without verification.  
-- Add mechanism to verify before deletion.  
-
 
 ## Usage
 
@@ -12,6 +8,7 @@
 Delete snapshots in AWS if they are older than the specified number of days.
 
 Delete AWS snapshots older than the specified number of days.
+Running without --write will make it run in dry-run mode.
 
 Usage: snapshotd --days <VALUE> --write <VALUE>
 
